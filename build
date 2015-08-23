@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e # fail on error
+
+#godep go test ./...
+golint ./...
+godep go install
+echo "Built and tested Golang app"
