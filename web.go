@@ -9,10 +9,16 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World")
-	})
+	router.GET("/", SayHello)
 
 	router.Run(":5000")
 
+}
+
+func SayHello(context *gin.Context) {
+	context.String(http.StatusOK, "Hello World")
+}
+
+func Whatever() string {
+	return "bob"
 }
