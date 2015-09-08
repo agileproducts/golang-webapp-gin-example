@@ -12,14 +12,16 @@ func TestSayHello(test *testing.T) {
 
 	//it return Hello World on the homepage
 	router := gin.New()
+  router.GET("/", SayHello)
+
 	request, _ := http.NewRequest("GET", "/", nil)
 	writer := httptest.NewRecorder()
 	router.ServeHTTP(writer, request)
-	assert.Equal(test, "Fuck You", writer.Body.String())
+	assert.Equal(test, "Hello World", writer.Body.String())
 
 }
 
 func TestWhatever(test *testing.T) {
-	x := Whatever()
+	x := whatever()
 	assert.Equal(test, "bob", x)
 }

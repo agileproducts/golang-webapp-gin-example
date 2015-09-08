@@ -15,10 +15,11 @@ func main() {
 
 }
 
+//SayHello says hello
 func SayHello(context *gin.Context) {
 	context.String(http.StatusOK, "Hello World")
 }
 
-func Whatever() string {
+func whatever() string {
 	return "bob"
 }
