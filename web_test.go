@@ -10,7 +10,6 @@ import (
 
 func TestSayHello(test *testing.T) {
 
-	//it return Hello World on the homepage
 	router := gin.New()
   router.GET("/", SayHello)
 
