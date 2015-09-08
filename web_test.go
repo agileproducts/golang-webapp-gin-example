@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"encoding/json"
 )
 
 func TestSayHello(test *testing.T) {
@@ -20,7 +21,35 @@ func TestSayHello(test *testing.T) {
 
 }
 
+func TestSendSomeJson(test *testing.T) {
+
+	router := gin.New()
+	router.GET("/somejson", SomeJson)
+
+	type Msg struct {
+		key	string
+	}
+
+	var expected Msg
+	expected.key = "value"
+
+	request, _ := http.NewRequest("GET", "/somejson", nil)
+	writer := httptest.NewRecorder()
+	router.ServeHTTP(writer, request)
+
+	//This is stupid. Json Unmarshal takes a byte[] doesn't work with a stream
+	//Decoder works with a stream but won't accept a byte[] as an input
+	//In ruby this would take 0.02 seconds
+
+  //decoder := json.NewDecoder(writer.Body.Bytes())
+  jsonData := Msg{}
+  //actual := decoder.Decode(&jsonData)
+  actual := json.Unmarshal(writer.Body.Bytes(),&jsonData)
+	assert.Equal(test, expected, actual)
+}
+
 func TestWhatever(test *testing.T) {
 	x := whatever()
 	assert.Equal(test, "bob", x)
 }
+
