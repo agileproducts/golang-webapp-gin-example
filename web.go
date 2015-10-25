@@ -2,17 +2,25 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 
 	router := gin.Default()
 
 	router.GET("/", SayHello)
 	router.GET("/somejson", SomeJSON)
 
-	router.Run(":5000")
+	router.Run(":" + port)
 
 }
 
