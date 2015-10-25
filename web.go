@@ -10,7 +10,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/", SayHello)
-  router.GET("/somejson", SomeJson)
+	router.GET("/somejson", SomeJSON)
 
 	router.Run(":5000")
 
@@ -21,9 +21,9 @@ func SayHello(context *gin.Context) {
 	context.String(http.StatusOK, "Hello World")
 }
 
-//SomeJson returns some json
-func SomeJson(context *gin.Context) {
-  context.JSON(http.StatusOK, gin.H{"key":"value"})
+//SomeJSON returns some json
+func SomeJSON(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{"key": "value"})
 }
 
 func whatever() string {

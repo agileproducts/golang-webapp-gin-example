@@ -1,20 +1,21 @@
 package main
 
 import (
+	_ "bytes"
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"encoding/json"
-	"fmt"
-	"bytes"
 )
 
 func TestSayHello(test *testing.T) {
 
 	router := gin.New()
-  router.GET("/", SayHello)
+	router.GET("/", SayHello)
 
 	request, _ := http.NewRequest("GET", "/", nil)
 	writer := httptest.NewRecorder()
@@ -26,44 +27,39 @@ func TestSayHello(test *testing.T) {
 func TestSendSomeJson(test *testing.T) {
 
 	router := gin.New()
-	router.GET("/somejson", SomeJson)
+	router.GET("/somejson", SomeJSON)
 
 	type Msg struct {
-		key	string
+		Key string `json:"key"`
 	}
 
 	var expected Msg
-	expected.key = "value"
+	expected.Key = "value"
+	//expectedJson, _ := json.Marshal(expected)
 
 	request, _ := http.NewRequest("GET", "/somejson", nil)
 	writer := httptest.NewRecorder()
 	router.ServeHTTP(writer, request)
 
-	fmt.Printf("%T\n",writer)
-	fmt.Printf("%T\n",writer.Body)
-	fmt.Printf("%T\n",writer.Body.Bytes())
-	bob := *bytes.NewReader(writer.Body.Bytes())
-	fmt.Printf("%T\n",bob)
-	decoder := json.NewDecoder(bob)
+	actualBytes, _ := ioutil.ReadAll(writer.Body)
+	actualMsg := Msg{}
+	error := json.Unmarshal(actualBytes, &actualMsg)
 
-	//http://stackoverflow.com/questions/25172177/json-marshal-how-body-of-http-newrequest
+	if error != nil {
+		fmt.Println(error)
+	}
 
+	//Some debugging lines
+	//fmt.Println(string(expectedJson))
+	//fmt.Println(expectedJson)
+	//fmt.Println(actualBytes)
+	//fmt.Println(actualMsg)
 
-	//This is stupid. Json Unmarshal takes a byte[] doesn't work with a stream
-	//Decoder works with a stream but won't accept a byte[] as an input
-	//In ruby this would take 0.02 seconds
+	assert.Equal(test, expected, actualMsg)
 
-  //decoder := json.NewDecoder(writer.Body.Bytes())
-  //jsonData := Msg{}
-  //actual := decoder.Decode(&jsonData)
-  //actual := json.Unmarshal(writer.Body.Bytes(),&jsonData)
-	//assert.Equal(test, expected, actual)
 }
 
 func TestWhatever(test *testing.T) {
 	x := whatever()
 	assert.Equal(test, "bob", x)
 }
-
-  //http://stackoverflow.com/questions/16634582/sending-json-with-go
-
