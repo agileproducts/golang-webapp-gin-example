@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e # fail on error
+
+heroku config:set GIN_MODE=release
+git push heroku master
