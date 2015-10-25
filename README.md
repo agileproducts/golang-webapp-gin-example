@@ -8,5 +8,9 @@ A basic example golang webap using the [Gin](https://github.com/gin-gonic/gin) f
 
 ## Run
 
-    go run web.go
+    ./run
+
+## Deploy to Heroku
+
+    ./deploy
 
